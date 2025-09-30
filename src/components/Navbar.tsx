@@ -8,7 +8,7 @@ export const Navbar = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-primary font-bold text-xl">
           <Building2 className="h-6 w-6" />
-          <span>ImóvelPremium</span>
+          <span>Mançores Elite</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
