@@ -1,8 +1,17 @@
-import { Building2, Menu, User } from "lucide-react";
+import { Building2, Menu, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Navbar = () => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -30,13 +39,43 @@ export const Navbar = () => {
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-5 w-5" />
           </Button>
-          <Button variant="outline" className="hidden md:flex">
-            <User className="h-4 w-4" />
-            <span>Entrar</span>
-          </Button>
-          <Button variant="hero" className="hidden md:flex">
-            Anunciar Imóvel
-          </Button>
+          {user ? (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="hidden md:flex">
+                    <User className="h-4 w-4 mr-2" />
+                    <span>{user.email?.split("@")[0]}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => navigate("/favoritos")}>
+                    Meus Favoritos
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/agendamentos")}>
+                    Meus Agendamentos
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button variant="hero" className="hidden md:flex">
+                Anunciar Imóvel
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" className="hidden md:flex" onClick={() => navigate("/auth")}>
+                <User className="h-4 w-4 mr-2" />
+                <span>Entrar</span>
+              </Button>
+              <Button variant="hero" className="hidden md:flex" onClick={() => navigate("/auth")}>
+                Anunciar Imóvel
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </nav>
