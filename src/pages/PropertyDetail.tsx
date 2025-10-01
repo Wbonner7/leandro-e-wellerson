@@ -4,18 +4,19 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { PropertyActions } from "@/components/PropertyActions";
+import { PropertyReviews } from "@/components/PropertyReviews";
+import { PropertyMap } from "@/components/PropertyMap";
+import { ViewCounter } from "@/components/ViewCounter";
 import {
   ArrowLeft,
   Bed,
   Bath,
   Square,
   MapPin,
-  Heart,
-  Share2,
   Calendar,
   Car,
   Wifi,
-  Wind,
 } from "lucide-react";
 import property1 from "@/assets/property-1.jpg";
 
@@ -24,7 +25,7 @@ const PropertyDetail = () => {
 
   // Mock data - in real app, fetch based on id
   const property = {
-    id: id,
+    id: id || "1",
     title: "Apartamento Moderno Vista Mar",
     location: "Barra da Tijuca, Rio de Janeiro - RJ",
     price: "R$ 8.500",
@@ -32,6 +33,8 @@ const PropertyDetail = () => {
     bathrooms: 2,
     area: 120,
     parking: 2,
+    latitude: -23.0042,
+    longitude: -43.3653,
     image: property1,
     description:
       "Apartamento espetacular com vista panorâmica para o mar, totalmente mobiliado com acabamento de alto padrão. Localizado em condomínio clube com completa infraestrutura de lazer e segurança 24h. Possui varanda gourmet ampla, suíte master com closet, cozinha planejada e muito mais.",
@@ -94,24 +97,19 @@ const PropertyDetail = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Content */}
               <div className="lg:col-span-2">
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                      {property.title}
-                    </h1>
-                    <div className="flex items-center text-muted-foreground">
-                      <MapPin className="h-5 w-5 mr-2" />
-                      <span>{property.location}</span>
+                <div className="space-y-4 mb-6">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                        {property.title}
+                      </h1>
+                      <div className="flex items-center text-muted-foreground">
+                        <MapPin className="h-5 w-5 mr-2" />
+                        <span>{property.location}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="icon">
-                      <Heart className="h-5 w-5" />
-                    </Button>
-                    <Button variant="outline" size="icon">
-                      <Share2 className="h-5 w-5" />
-                    </Button>
-                  </div>
+                  <ViewCounter propertyId={property.id} />
                 </div>
 
                 <div className="flex flex-wrap gap-4 mb-6">
@@ -142,7 +140,7 @@ const PropertyDetail = () => {
 
                 <Separator className="my-6" />
 
-                <div>
+                <div className="mb-6">
                   <h2 className="text-2xl font-semibold mb-4">Comodidades</h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {property.amenities.map((amenity, index) => (
@@ -152,6 +150,18 @@ const PropertyDetail = () => {
                       </Badge>
                     ))}
                   </div>
+                </div>
+
+                <Separator className="my-6" />
+
+                <PropertyMap 
+                  latitude={property.latitude}
+                  longitude={property.longitude}
+                  address={property.location}
+                />
+
+                <div className="mt-6">
+                  <PropertyReviews propertyId={property.id} />
                 </div>
               </div>
 
@@ -165,14 +175,7 @@ const PropertyDetail = () => {
 
                   <Separator className="my-6" />
 
-                  <div className="space-y-3 mb-6">
-                    <Button variant="hero" size="lg" className="w-full">
-                      Agendar Visita
-                    </Button>
-                    <Button variant="outline" size="lg" className="w-full">
-                      Entrar em Contato
-                    </Button>
-                  </div>
+                  <PropertyActions propertyId={property.id} />
 
                   <div className="bg-secondary/50 p-4 rounded-lg">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
