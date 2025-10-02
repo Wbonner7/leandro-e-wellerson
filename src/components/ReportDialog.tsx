@@ -13,6 +13,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const reportSchema = z.object({
+  description: z.string().max(1000, "Description must be less than 1000 characters").optional(),
+});
 
 interface ReportDialogProps {
   open: boolean;
@@ -39,6 +44,13 @@ export function ReportDialog({ open, onOpenChange, propertyId }: ReportDialogPro
     e.preventDefault();
     if (!user) return;
 
+    // Validate input
+    const validation = reportSchema.safeParse({ description });
+    if (!validation.success) {
+      toast.error(validation.error.errors[0].message);
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
@@ -47,7 +59,7 @@ export function ReportDialog({ open, onOpenChange, propertyId }: ReportDialogPro
           user_id: user.id,
           property_id: propertyId,
           reason,
-          description,
+          description: description.trim() || null,
           status: "pending",
         });
 

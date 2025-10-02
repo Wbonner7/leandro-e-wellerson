@@ -15,6 +15,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { z } from "zod";
+
+const visitSchema = z.object({
+  notes: z.string().max(500, "Notes must be less than 500 characters").optional(),
+});
 
 interface VisitScheduleDialogProps {
   open: boolean;
@@ -37,6 +42,13 @@ export function VisitScheduleDialog({ open, onOpenChange, propertyId }: VisitSch
     e.preventDefault();
     if (!user || !date) return;
 
+    // Validate input
+    const validation = visitSchema.safeParse({ notes });
+    if (!validation.success) {
+      toast.error(validation.error.errors[0].message);
+      return;
+    }
+
     setLoading(true);
     try {
       const [hours, minutes] = time.split(":");
@@ -50,7 +62,7 @@ export function VisitScheduleDialog({ open, onOpenChange, propertyId }: VisitSch
           property_id: propertyId,
           visit_date: visitDate.toISOString(),
           status: "scheduled",
-          notes,
+          notes: notes.trim() || null,
         });
 
       if (error) throw error;

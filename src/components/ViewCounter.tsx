@@ -11,23 +11,17 @@ export function ViewCounter({ propertyId }: ViewCounterProps) {
 
   useEffect(() => {
     const incrementViews = async () => {
-      // Get current views
-      const { data } = await supabase
-        .from("properties")
-        .select("views_count")
-        .eq("id", propertyId)
-        .single();
+      try {
+        // Use atomic increment function to prevent race conditions
+        const { data, error } = await supabase.rpc('increment_property_views', {
+          property_uuid: propertyId
+        });
 
-      if (data) {
-        const newCount = (data.views_count || 0) + 1;
+        if (error) throw error;
         
-        // Update views
-        await supabase
-          .from("properties")
-          .update({ views_count: newCount })
-          .eq("id", propertyId);
-
-        setViews(newCount);
+        setViews(data || 0);
+      } catch (error) {
+        console.error('Error incrementing views:', error);
       }
     };
 

@@ -12,6 +12,11 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const interestSchema = z.object({
+  message: z.string().max(1000, "Message must be less than 1000 characters").optional(),
+});
 
 interface InterestDialogProps {
   open: boolean;
@@ -28,6 +33,13 @@ export function InterestDialog({ open, onOpenChange, propertyId }: InterestDialo
     e.preventDefault();
     if (!user) return;
 
+    // Validate input
+    const validation = interestSchema.safeParse({ message });
+    if (!validation.success) {
+      toast.error(validation.error.errors[0].message);
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
@@ -35,7 +47,7 @@ export function InterestDialog({ open, onOpenChange, propertyId }: InterestDialo
         .insert({
           user_id: user.id,
           property_id: propertyId,
-          message,
+          message: message.trim() || null,
           status: "pending",
         });
 

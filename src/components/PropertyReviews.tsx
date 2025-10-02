@@ -7,6 +7,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+
+const reviewSchema = z.object({
+  rating: z.number().min(1, "Rating is required").max(5, "Rating must be between 1 and 5"),
+  comment: z.string().trim().min(1, "Comment is required").max(1000, "Comment must be less than 1000 characters"),
+});
 
 interface Review {
   id: string;
@@ -64,6 +70,13 @@ export function PropertyReviews({ propertyId }: PropertyReviewsProps) {
       return;
     }
 
+    // Validate input
+    const validation = reviewSchema.safeParse({ rating, comment });
+    if (!validation.success) {
+      toast.error(validation.error.errors[0].message);
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
@@ -72,7 +85,7 @@ export function PropertyReviews({ propertyId }: PropertyReviewsProps) {
           user_id: user.id,
           property_id: propertyId,
           rating,
-          comment,
+          comment: comment.trim(),
         });
 
       if (error) throw error;

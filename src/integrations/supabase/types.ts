@@ -279,7 +279,7 @@ export type Database = {
           created_at: string
           id: string
           property_id: string
-          rating: number | null
+          rating: number
           updated_at: string
           user_id: string
         }
@@ -288,7 +288,7 @@ export type Database = {
           created_at?: string
           id?: string
           property_id: string
-          rating?: number | null
+          rating: number
           updated_at?: string
           user_id: string
         }
@@ -297,7 +297,7 @@ export type Database = {
           created_at?: string
           id?: string
           property_id?: string
-          rating?: number | null
+          rating?: number
           updated_at?: string
           user_id?: string
         }
@@ -374,7 +374,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_property_views: {
+        Args: { property_uuid: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
