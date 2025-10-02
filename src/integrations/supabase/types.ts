@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_consents: {
+        Row: {
+          consent_given_at: string
+          created_at: string
+          id: string
+          property_id: string
+          property_owner_id: string
+          user_id: string
+        }
+        Insert: {
+          consent_given_at?: string
+          created_at?: string
+          id?: string
+          property_id: string
+          property_owner_id: string
+          user_id: string
+        }
+        Update: {
+          consent_given_at?: string
+          created_at?: string
+          id?: string
+          property_id?: string
+          property_owner_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_consents_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_consents_property_owner_id_fkey"
+            columns: ["property_owner_id"]
+            isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "contact_consents_property_owner_id_fkey"
+            columns: ["property_owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_consents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "contact_consents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       favorites: {
         Row: {
           created_at: string
@@ -40,6 +103,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "properties"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "favorites_user_id_fkey"
@@ -140,6 +210,13 @@ export type Database = {
             foreignKeyName: "properties_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "properties_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -223,6 +300,13 @@ export type Database = {
             foreignKeyName: "property_interests_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "property_interests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -268,6 +352,13 @@ export type Database = {
             foreignKeyName: "property_reports_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "property_reports_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -308,6 +399,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "properties"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "property_reviews_user_id_fkey"
@@ -364,6 +462,13 @@ export type Database = {
             foreignKeyName: "property_visits_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "property_visits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -371,9 +476,50 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      consented_user_contacts: {
+        Row: {
+          avatar_url: string | null
+          consent_given_at: string | null
+          full_name: string | null
+          phone: string | null
+          property_id: string | null
+          property_owner_id: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_consents_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_consents_property_owner_id_fkey"
+            columns: ["property_owner_id"]
+            isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "contact_consents_property_owner_id_fkey"
+            columns: ["property_owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
+      has_contact_consent: {
+        Args: {
+          _property_id: string
+          _property_owner_id: string
+          _user_id: string
+        }
+        Returns: boolean
+      }
       increment_property_views: {
         Args: { property_uuid: string }
         Returns: number
