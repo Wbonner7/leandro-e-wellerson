@@ -28,7 +28,7 @@ const PropertyDetail = () => {
     id: id || "1",
     title: "Apartamento Moderno Vista Mar",
     location: "Barra da Tijuca, Rio de Janeiro - RJ",
-    price: "R$ 8.500",
+    price: "R$ 1.850.000",
     bedrooms: 3,
     bathrooms: 2,
     area: 120,
@@ -170,7 +170,7 @@ const PropertyDetail = () => {
                 <div className="sticky top-24 bg-card border border-border rounded-xl p-6 shadow-elegant">
                   <div className="mb-6">
                     <div className="text-3xl font-bold text-primary mb-1">{property.price}</div>
-                    <div className="text-sm text-muted-foreground">por mês</div>
+                    <div className="text-sm text-muted-foreground">à venda</div>
                   </div>
 
                   <Separator className="my-6" />

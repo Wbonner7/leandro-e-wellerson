@@ -24,7 +24,7 @@ export const Hero = () => {
           <span className="gradient-accent bg-clip-text text-transparent">Seus Sonhos</span>
         </h1>
         <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-          A plataforma mais completa para comprar, vender e alugar imóveis com tecnologia de ponta e atendimento premium.
+          A plataforma mais completa para comprar e vender imóveis com tecnologia de ponta e atendimento premium.
         </p>
 
         {/* Search Bar */}

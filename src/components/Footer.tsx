@@ -10,10 +10,10 @@ export const Footer = () => {
           <div>
             <Link to="/" className="flex items-center gap-2 mb-4">
               <Building2 className="h-6 w-6" />
-              <span className="font-bold text-xl">Mançores Elite</span>
+              <span className="font-bold text-xl">Quintto</span>
             </Link>
             <p className="text-primary-foreground/80 text-sm mb-4">
-              A plataforma mais completa para encontrar o imóvel dos seus sonhos.
+              A plataforma mais completa para comprar e vender o imóvel dos seus sonhos.
             </p>
           </div>
 
@@ -50,8 +50,8 @@ export const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li className="text-primary-foreground/80">Compra</li>
               <li className="text-primary-foreground/80">Venda</li>
-              <li className="text-primary-foreground/80">Aluguel</li>
               <li className="text-primary-foreground/80">Avaliação</li>
+              <li className="text-primary-foreground/80">Consultoria</li>
             </ul>
           </div>
 
@@ -65,7 +65,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-primary-foreground/80">
                 <Mail className="h-4 w-4" />
-                <span>contato@mancoreselite.com</span>
+                <span>contato@quintto.com.br</span>
               </li>
               <li className="flex items-center gap-2 text-primary-foreground/80">
                 <MapPin className="h-4 w-4" />
@@ -76,7 +76,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-sm text-primary-foreground/60">
-          <p>© 2024 Mançores Elite. Todos os direitos reservados.</p>
+          <p>© 2024 Quintto. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>
