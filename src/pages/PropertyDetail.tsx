@@ -8,6 +8,9 @@ import { PropertyActions } from "@/components/PropertyActions";
 import { PropertyReviews } from "@/components/PropertyReviews";
 import { PropertyMap } from "@/components/PropertyMap";
 import { ViewCounter } from "@/components/ViewCounter";
+import { LiveViewCounter } from "@/components/LiveViewCounter";
+import { BrokerReviews } from "@/components/BrokerReviews";
+import { SimilarProperties } from "@/components/SimilarProperties";
 import {
   ArrowLeft,
   Bed,
@@ -109,7 +112,10 @@ const PropertyDetail = () => {
                       </div>
                     </div>
                   </div>
-                  <ViewCounter propertyId={property.id} />
+                  <div className="flex flex-col gap-2">
+                    <ViewCounter propertyId={property.id} />
+                    <LiveViewCounter propertyId={property.id} />
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-4 mb-6">
@@ -163,6 +169,12 @@ const PropertyDetail = () => {
                 <div className="mt-6">
                   <PropertyReviews propertyId={property.id} />
                 </div>
+
+                <Separator className="my-6" />
+
+                <div className="mt-6">
+                  <BrokerReviews brokerId="default-broker-id" />
+                </div>
               </div>
 
               {/* Sidebar */}
@@ -183,7 +195,7 @@ const PropertyDetail = () => {
                       <span>Disponível para visitação</span>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Segunda a Sábado, das 9h às 18h
+                      Seg-Sex: 8h às 18h | Sáb: 8h às 16h
                     </p>
                   </div>
                 </div>
@@ -191,6 +203,8 @@ const PropertyDetail = () => {
             </div>
           </div>
         </section>
+
+        <SimilarProperties currentPropertyId={property.id} />
 
         <Footer />
       </div>

@@ -34,9 +34,25 @@ export function VisitScheduleDialog({ open, onOpenChange, propertyId }: VisitSch
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const timeSlots = [
-    "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00"
-  ];
+  // Horários comerciais: Seg-Sex: 8h-18h, Sáb: 8h-16h
+  const getTimeSlots = (selectedDate: Date | undefined) => {
+    if (!selectedDate) return [];
+    
+    const dayOfWeek = selectedDate.getDay();
+    
+    // Domingo bloqueado
+    if (dayOfWeek === 0) return [];
+    
+    // Sábado: 8h-16h
+    if (dayOfWeek === 6) {
+      return ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
+    }
+    
+    // Seg-Sex: 8h-18h
+    return ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+  };
+
+  const timeSlots = getTimeSlots(date);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,27 +115,42 @@ export function VisitScheduleDialog({ open, onOpenChange, propertyId }: VisitSch
               mode="single"
               selected={date}
               onSelect={setDate}
-              disabled={(date) => date < new Date()}
+              disabled={(date) => {
+                const day = date.getDay();
+                return date < new Date() || day === 0; // Bloqueia datas passadas e domingos
+              }}
               className="rounded-md border"
               locale={ptBR}
             />
+            {date && date.getDay() === 0 && (
+              <p className="text-sm text-destructive">Visitas não são realizadas aos domingos.</p>
+            )}
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="time">Horário</Label>
-            <select
-              id="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="w-full rounded-md border border-input bg-background px-3 py-2"
-            >
-              {timeSlots.map((slot) => (
-                <option key={slot} value={slot}>
-                  {slot}
-                </option>
-              ))}
-            </select>
-          </div>
+          {timeSlots.length > 0 ? (
+            <div className="space-y-2">
+              <Label htmlFor="time">Horário</Label>
+              <select
+                id="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className="w-full rounded-md border border-input bg-background px-3 py-2"
+              >
+                {timeSlots.map((slot) => (
+                  <option key={slot} value={slot}>
+                    {slot}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-muted-foreground">
+                {date && date.getDay() === 6 
+                  ? "Sábado: horário disponível das 8h às 16h"
+                  : "Segunda a Sexta: horário disponível das 8h às 18h"}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">Selecione uma data para ver os horários disponíveis.</p>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="notes">Observações (opcional)</Label>

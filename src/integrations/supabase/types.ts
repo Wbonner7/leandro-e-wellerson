@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      broker_reviews: {
+        Row: {
+          broker_id: string
+          comment: string
+          created_at: string
+          id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          broker_id: string
+          comment: string
+          created_at?: string
+          id?: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          broker_id?: string
+          comment?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       contact_consents: {
         Row: {
           consent_given_at: string
@@ -260,9 +290,14 @@ export type Database = {
       property_interests: {
         Row: {
           contacted_at: string | null
+          cpf: string | null
           created_at: string
+          email: string | null
+          full_name: string | null
           id: string
+          income: string | null
           message: string | null
+          phone: string | null
           property_id: string
           status: string | null
           updated_at: string
@@ -270,9 +305,14 @@ export type Database = {
         }
         Insert: {
           contacted_at?: string | null
+          cpf?: string | null
           created_at?: string
+          email?: string | null
+          full_name?: string | null
           id?: string
+          income?: string | null
           message?: string | null
+          phone?: string | null
           property_id: string
           status?: string | null
           updated_at?: string
@@ -280,9 +320,14 @@ export type Database = {
         }
         Update: {
           contacted_at?: string | null
+          cpf?: string | null
           created_at?: string
+          email?: string | null
+          full_name?: string | null
           id?: string
+          income?: string | null
           message?: string | null
+          phone?: string | null
           property_id?: string
           status?: string | null
           updated_at?: string
