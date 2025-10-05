@@ -52,7 +52,7 @@ export function BrokerReviews({ brokerId }: BrokerReviewsProps) {
           rating,
           comment,
           created_at,
-          profiles!broker_reviews_user_id_fkey (
+          profiles!broker_reviews_user_id_profiles_fkey (
             full_name
           )
         `)
@@ -60,7 +60,7 @@ export function BrokerReviews({ brokerId }: BrokerReviewsProps) {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setReviews(data || []);
+      setReviews((data as any) || []);
     } catch (error) {
       console.error("Error loading broker reviews:", error);
     }
