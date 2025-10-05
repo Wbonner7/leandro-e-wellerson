@@ -16,12 +16,29 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const interestSchema = z.object({
-  full_name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres").max(100),
-  email: z.string().email("E-mail inválido"),
-  phone: z.string().min(10, "Telefone inválido").max(15),
-  income: z.string().min(1, "Renda familiar é obrigatória"),
-  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/, "CPF inválido"),
-  message: z.string().max(1000, "Mensagem muito longa").optional(),
+  full_name: z.string()
+    .trim()
+    .min(3, "Nome deve ter pelo menos 3 caracteres")
+    .max(100, "Nome muito longo"),
+  email: z.string()
+    .trim()
+    .email("E-mail inválido")
+    .max(255, "E-mail muito longo"),
+  phone: z.string()
+    .trim()
+    .min(10, "Telefone inválido")
+    .max(15, "Telefone inválido"),
+  income: z.string()
+    .trim()
+    .min(1, "Renda familiar é obrigatória")
+    .max(50, "Valor inválido"),
+  cpf: z.string()
+    .trim()
+    .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/, "CPF inválido"),
+  message: z.string()
+    .trim()
+    .max(1000, "Mensagem muito longa")
+    .optional(),
 });
 
 interface InterestDialogProps {
@@ -55,17 +72,19 @@ export function InterestDialog({ open, onOpenChange, propertyId }: InterestDialo
 
     setLoading(true);
     try {
+      const validatedData = validation.data;
+      
       const { error } = await supabase
         .from("property_interests")
         .insert({
           user_id: user.id,
           property_id: propertyId,
-          message: formData.message.trim() || null,
-          full_name: formData.full_name,
-          email: formData.email,
-          phone: formData.phone,
-          income: formData.income,
-          cpf: formData.cpf,
+          message: validatedData.message || null,
+          full_name: validatedData.full_name,
+          email: validatedData.email,
+          phone: validatedData.phone,
+          income: validatedData.income,
+          cpf: validatedData.cpf,
           status: "pending",
         });
 
@@ -82,7 +101,8 @@ export function InterestDialog({ open, onOpenChange, propertyId }: InterestDialo
       });
       onOpenChange(false);
     } catch (error: any) {
-      toast.error(error.message || "Erro ao registrar interesse");
+      console.error("Error submitting interest:", error);
+      toast.error("Erro ao registrar interesse. Tente novamente.");
     } finally {
       setLoading(false);
     }
