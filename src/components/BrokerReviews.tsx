@@ -52,7 +52,7 @@ export function BrokerReviews({ brokerId }: BrokerReviewsProps) {
           rating,
           comment,
           created_at,
-          profiles (
+          profiles!broker_reviews_user_id_fkey (
             full_name
           )
         `)
