@@ -112,10 +112,7 @@ const PropertyDetail = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <ViewCounter propertyId={property.id} />
-                    <LiveViewCounter propertyId={property.id} />
-                  </div>
+                  <LiveViewCounter propertyId={property.id} />
                 </div>
 
                 <div className="flex flex-wrap gap-4 mb-6">

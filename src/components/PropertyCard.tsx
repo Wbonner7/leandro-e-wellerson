@@ -77,10 +77,7 @@ export const PropertyCard = ({
           </div>
 
           <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold text-primary">{price}</div>
-              <div className="text-xs text-muted-foreground">por mês</div>
-            </div>
+            <div className="text-2xl font-bold text-primary">{price}</div>
             <Button variant="outline" size="sm">
               Ver Detalhes
             </Button>

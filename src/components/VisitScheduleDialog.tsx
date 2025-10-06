@@ -56,7 +56,17 @@ export function VisitScheduleDialog({ open, onOpenChange, propertyId }: VisitSch
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !date) return;
+    
+    // Verifica se usuário está logado
+    if (!user) {
+      toast.error("Faça login para agendar uma visita");
+      return;
+    }
+    
+    if (!date) {
+      toast.error("Selecione uma data para a visita");
+      return;
+    }
 
     // Validate input
     const validation = visitSchema.safeParse({ notes });
