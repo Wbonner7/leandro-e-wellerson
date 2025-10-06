@@ -88,30 +88,56 @@ export default function Auth() {
   };
 
   const handleSocialAuth = async (provider: "google" | "facebook") => {
+    setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${window.location.origin}/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
-      if (error) throw error;
+      
+      if (error) {
+        console.error("OAuth error:", error);
+        throw error;
+      }
+      
+      // User will be redirected to the OAuth provider
     } catch (error: any) {
-      toast.error(error.message || "Erro ao fazer login com rede social.");
+      console.error("Social auth error:", error);
+      if (error.message?.includes("403")) {
+        toast.error("Erro de configuração do Google. Entre em contato com o suporte.");
+      } else {
+        toast.error(error.message || "Erro ao fazer login. Tente novamente.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLinkedInAuth = async () => {
+    setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "linkedin_oidc",
         options: {
           redirectTo: `${window.location.origin}/`,
         },
       });
-      if (error) throw error;
+      
+      if (error) {
+        console.error("LinkedIn OAuth error:", error);
+        throw error;
+      }
     } catch (error: any) {
+      console.error("LinkedIn auth error:", error);
       toast.error(error.message || "Erro ao fazer login com LinkedIn.");
+    } finally {
+      setLoading(false);
     }
   };
 
