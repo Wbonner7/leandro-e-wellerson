@@ -30,21 +30,16 @@ export const LeadCaptureForm = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.from("leads").insert([
+      const { error } = await supabase.from("property_interests").insert([
         {
+          user_id: (await supabase.auth.getUser()).data.user?.id || "",
+          property_id: "00000000-0000-0000-0000-000000000000", // Temporary placeholder
           full_name: formData.full_name,
           email: formData.email,
           phone: formData.phone,
           cpf: formData.cpf,
-          monthly_income: formData.monthly_income ? parseFloat(formData.monthly_income) : null,
-          interest_location: formData.interest_location,
-          property_type: formData.property_type,
-          budget_min: parseFloat(formData.budget_min),
-          budget_max: parseFloat(formData.budget_max),
-          bedrooms_min: parseInt(formData.bedrooms_min),
-          notes: formData.notes,
-          source: "website",
-          status: "novo",
+          income: formData.monthly_income,
+          message: `Tipo: ${formData.property_type}, Orçamento: R$ ${formData.budget_min} - R$ ${formData.budget_max}, Localização: ${formData.interest_location}, Quartos: ${formData.bedrooms_min}+, Notas: ${formData.notes}`,
         },
       ]).select();
 

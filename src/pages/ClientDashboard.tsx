@@ -58,41 +58,24 @@ const ClientDashboard = () => {
         return;
       }
 
-      // Load client profile
-      const { data: client } = await supabase
-        .from("clients")
-        .select("*, subscription_plans(*)")
-        .eq("user_id", user.id)
-        .single();
+      // Temporary placeholder until database migration is complete
+      setClientData({
+        company_name: "Aguardando Configuração",
+        subscription_plans: {
+          name: "N/A",
+          monthly_price: 0
+        }
+      });
 
-      if (!client) {
-        toast.error("Cliente não encontrado. Entre em contato com o suporte.");
-        navigate("/");
-        return;
-      }
-
-      setClientData(client);
-
-      // Load assigned leads
-      const { data: leadsData } = await supabase
-        .from("leads")
-        .select("*")
-        .eq("assigned_to", client.id)
-        .order("created_at", { ascending: false })
-        .limit(10);
-
-      setLeads(leadsData || []);
-
-      // Calculate stats
-      const activeNegotiations = leadsData?.filter(
-        (l) => l.status === "em_negociacao" || l.status === "proposta"
-      ).length || 0;
+      setLeads([]);
 
       setStats({
-        leadsThisMonth: client.leads_used_this_month || 0,
-        leadsQuota: client.monthly_leads_quota || 0,
-        activeNegotiations,
+        leadsThisMonth: 0,
+        leadsQuota: 0,
+        activeNegotiations: 0,
       });
+      
+      toast.info("Aguardando configuração do banco de dados. Execute a migração para ver seus dados.");
     } catch (error) {
       console.error("Error loading client data:", error);
       toast.error("Erro ao carregar dados");
