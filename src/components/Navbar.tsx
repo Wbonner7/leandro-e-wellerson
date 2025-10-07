@@ -1,4 +1,4 @@
-import { Building2, Menu, User, LogOut } from "lucide-react";
+import { Building2, Menu, User, LogOut, Settings, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -43,7 +43,12 @@ export const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => navigate("/profile")}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Meu Perfil
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/favoritos")}>
+                    <Heart className="h-4 w-4 mr-2" />
                     Meus Favoritos
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/agendamentos")}>
