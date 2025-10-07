@@ -58,24 +58,46 @@ const ClientDashboard = () => {
         return;
       }
 
-      // Temporary placeholder until database migration is complete
-      setClientData({
-        company_name: "Aguardando Configuração",
-        subscription_plans: {
-          name: "N/A",
-          monthly_price: 0
-        }
-      });
+      const { data: client } = await supabase
+        .from("clients")
+        .select("*, subscription_plans(*)")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-      setLeads([]);
+      if (client) {
+        setClientData(client);
 
-      setStats({
-        leadsThisMonth: 0,
-        leadsQuota: 0,
-        activeNegotiations: 0,
-      });
-      
-      toast.info("Aguardando configuração do banco de dados. Execute a migração para ver seus dados.");
+        const { data: leadsData } = await supabase
+          .from("leads")
+          .select("*")
+          .eq("client_id", client.id)
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        setLeads(leadsData || []);
+
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const { count: monthCount } = await supabase
+          .from("leads")
+          .select("*", { count: "exact", head: true })
+          .eq("client_id", client.id)
+          .gte("created_at", startOfMonth.toISOString());
+
+        const { count: activeCount } = await supabase
+          .from("leads")
+          .select("*", { count: "exact", head: true })
+          .eq("client_id", client.id)
+          .in("status", ["contatado", "em_negociacao", "proposta"]);
+
+        setStats({
+          leadsThisMonth: monthCount || 0,
+          leadsQuota: client.subscription_plans.leads_quota || 0,
+          activeNegotiations: activeCount || 0,
+        });
+      }
     } catch (error) {
       console.error("Error loading client data:", error);
       toast.error("Erro ao carregar dados");

@@ -10,7 +10,16 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 
-export const SearchFilters = () => {
+interface SearchFiltersProps {
+  onFilterChange?: (filters: {
+    propertyType: string;
+    bedrooms: string;
+    priceRange: string;
+    location: string;
+  }) => void;
+}
+
+export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   const [propertyType, setPropertyType] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [priceRange, setPriceRange] = useState("");
@@ -24,8 +33,11 @@ export const SearchFilters = () => {
       location,
     };
     
-    console.log("Filters applied:", filters);
-    toast.success("Filtros aplicados! (Em breve implementaremos a busca)");
+    if (onFilterChange) {
+      onFilterChange(filters);
+    }
+    
+    toast.success("Filtros aplicados com sucesso!");
   };
 
   return (

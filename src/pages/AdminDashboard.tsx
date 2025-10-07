@@ -42,7 +42,20 @@ const AdminDashboard = () => {
         return;
       }
 
-      // Temporary: Skip admin check until database is ready
+      // Check if user has admin role
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+
+      if (!roleData) {
+        toast.error("Acesso negado. Você não tem permissões de administrador.");
+        navigate("/");
+        return;
+      }
+
       setIsAdmin(true);
       loadDashboardStats();
     } catch (error) {
@@ -55,17 +68,31 @@ const AdminDashboard = () => {
 
   const loadDashboardStats = async () => {
     try {
-      // Temporary placeholder stats until database migration is complete
+      const { data: clients } = await supabase.from("clients").select("*");
+      const { data: leads } = await supabase
+        .from("leads")
+        .select("*")
+        .in("status", ["novo", "contatado", "em_negociacao"]);
+      const { data: commissions } = await supabase
+        .from("commissions")
+        .select("amount");
+
+      const { data: subscriptions } = await supabase
+        .from("subscription_plans")
+        .select("monthly_price");
+
+      const monthlyRevenue = subscriptions?.reduce((sum, plan) => sum + Number(plan.monthly_price), 0) || 0;
+
       setStats({
-        totalClients: 0,
-        activeLeads: 0,
-        totalCommissions: 0,
-        monthlyRevenue: 0,
+        totalClients: clients?.length || 0,
+        activeLeads: leads?.length || 0,
+        totalCommissions:
+          commissions?.reduce((acc, c) => acc + Number(c.amount), 0) || 0,
+        monthlyRevenue: monthlyRevenue,
       });
-      
-      toast.info("Aguardando configuração do banco de dados. Execute a migração para ver os dados reais.");
     } catch (error) {
       console.error("Error loading stats:", error);
+      toast.error("Erro ao carregar estatísticas");
     }
   };
 

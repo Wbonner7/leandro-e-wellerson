@@ -11,6 +11,10 @@ import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
 import Anunciar from "./pages/Anunciar";
 import Agendamentos from "./pages/Agendamentos";
+import AdminDashboard from "./pages/AdminDashboard";
+import ClientDashboard from "./pages/ClientDashboard";
+import LeadsManagement from "./pages/LeadsManagement";
+import ClientsManagement from "./pages/ClientsManagement";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +32,10 @@ const App = () => (
           <Route path="/perfil" element={<Profile />} />
           <Route path="/anunciar" element={<Anunciar />} />
           <Route path="/agendamentos" element={<Agendamentos />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/leads" element={<LeadsManagement />} />
+          <Route path="/admin/clients" element={<ClientsManagement />} />
+          <Route path="/dashboard" element={<ClientDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
