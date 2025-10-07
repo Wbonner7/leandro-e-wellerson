@@ -58,6 +58,10 @@ const ClientDashboard = () => {
         return;
       }
 
+      // TODO: Execute database-schema-fixed.sql no Backend SQL Editor primeiro
+      console.log("Client dashboard disabled until schema is created");
+      
+      /* DESCOMENTAR APÓS EXECUTAR O SQL:
       const { data: client } = await supabase
         .from("clients")
         .select("*, subscription_plans(*)")
@@ -70,7 +74,7 @@ const ClientDashboard = () => {
         const { data: leadsData } = await supabase
           .from("leads")
           .select("*")
-          .eq("client_id", client.id)
+          .eq("assigned_client_id", client.id)
           .order("created_at", { ascending: false })
           .limit(10);
 
@@ -83,14 +87,14 @@ const ClientDashboard = () => {
         const { count: monthCount } = await supabase
           .from("leads")
           .select("*", { count: "exact", head: true })
-          .eq("client_id", client.id)
+          .eq("assigned_client_id", client.id)
           .gte("created_at", startOfMonth.toISOString());
 
         const { count: activeCount } = await supabase
           .from("leads")
           .select("*", { count: "exact", head: true })
-          .eq("client_id", client.id)
-          .in("status", ["contatado", "em_negociacao", "proposta"]);
+          .eq("assigned_client_id", client.id)
+          .in("status", ["contacted", "negotiating"]);
 
         setStats({
           leadsThisMonth: monthCount || 0,
@@ -98,6 +102,7 @@ const ClientDashboard = () => {
           activeNegotiations: activeCount || 0,
         });
       }
+      */
     } catch (error) {
       console.error("Error loading client data:", error);
       toast.error("Erro ao carregar dados");

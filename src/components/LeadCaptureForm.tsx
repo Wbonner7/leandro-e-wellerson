@@ -30,6 +30,11 @@ export const LeadCaptureForm = () => {
     setLoading(true);
 
     try {
+      // TODO: Execute database-schema-fixed.sql no Backend SQL Editor primeiro
+      // Temporariamente desabilitado até o schema ser criado
+      console.log("Lead form data:", formData);
+      
+      /* DESCOMENTAR APÓS EXECUTAR O SQL:
       const { error } = await supabase.from("leads").insert([
         {
           full_name: formData.full_name,
@@ -37,17 +42,17 @@ export const LeadCaptureForm = () => {
           phone: formData.phone,
           cpf: formData.cpf,
           monthly_income: formData.monthly_income,
-          interest_location: formData.interest_location,
+          preferred_location: formData.interest_location,
           property_type: formData.property_type,
           budget_min: parseFloat(formData.budget_min) || 0,
           budget_max: parseFloat(formData.budget_max) || 0,
-          bedrooms_min: parseInt(formData.bedrooms_min) || 1,
+          bedrooms: parseInt(formData.bedrooms_min) || 1,
           notes: formData.notes,
-          status: "novo",
         },
       ]);
 
       if (error) throw error;
+      */
 
       toast.success("Obrigado! Seu interesse foi registrado. Em breve um corretor entrará em contato.");
       

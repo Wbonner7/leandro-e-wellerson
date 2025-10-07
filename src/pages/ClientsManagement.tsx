@@ -46,6 +46,10 @@ const ClientsManagement = () => {
 
   const loadClients = async () => {
     try {
+      // TODO: Execute database-schema-fixed.sql no Backend SQL Editor primeiro
+      console.log("Clients loading disabled until schema is created");
+      
+      /* DESCOMENTAR APÓS EXECUTAR O SQL:
       const { data, error } = await supabase
         .from("clients")
         .select("*, subscription_plans(*)")
@@ -54,6 +58,7 @@ const ClientsManagement = () => {
       if (error) throw error;
 
       setClients(data || []);
+      */
     } catch (error) {
       console.error("Error loading clients:", error);
       toast.error("Erro ao carregar clientes");

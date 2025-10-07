@@ -47,6 +47,10 @@ const LeadsManagement = () => {
 
   const loadLeads = async () => {
     try {
+      // TODO: Execute database-schema-fixed.sql no Backend SQL Editor primeiro
+      console.log("Leads loading disabled until schema is created");
+      
+      /* DESCOMENTAR APÓS EXECUTAR O SQL:
       const { data, error } = await supabase
         .from("leads")
         .select("*")
@@ -55,6 +59,7 @@ const LeadsManagement = () => {
       if (error) throw error;
 
       setLeads(data || []);
+      */
     } catch (error) {
       console.error("Error loading leads:", error);
       toast.error("Erro ao carregar leads");
