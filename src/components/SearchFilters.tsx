@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,8 +8,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 export const SearchFilters = () => {
+  const [propertyType, setPropertyType] = useState("");
+  const [bedrooms, setBedrooms] = useState("");
+  const [priceRange, setPriceRange] = useState("");
+  const [location, setLocation] = useState("");
+
+  const handleApplyFilters = () => {
+    const filters = {
+      propertyType,
+      bedrooms,
+      priceRange,
+      location,
+    };
+    
+    console.log("Filters applied:", filters);
+    toast.success("Filtros aplicados! (Em breve implementaremos a busca)");
+  };
+
   return (
     <section className="py-12 border-b border-border">
       <div className="container mx-auto px-4">
@@ -19,7 +38,7 @@ export const SearchFilters = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 w-full">
-            <Select>
+            <Select value={propertyType} onValueChange={setPropertyType}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Tipo de Imóvel" />
               </SelectTrigger>
@@ -31,7 +50,7 @@ export const SearchFilters = () => {
               </SelectContent>
             </Select>
 
-            <Select>
+            <Select value={bedrooms} onValueChange={setBedrooms}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Quartos" />
               </SelectTrigger>
@@ -43,19 +62,19 @@ export const SearchFilters = () => {
               </SelectContent>
             </Select>
 
-            <Select>
+            <Select value={priceRange} onValueChange={setPriceRange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Faixa de Preço" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">Até R$ 3.000</SelectItem>
-                <SelectItem value="2">R$ 3.000 - R$ 6.000</SelectItem>
-                <SelectItem value="3">R$ 6.000 - R$ 10.000</SelectItem>
-                <SelectItem value="4">R$ 10.000+</SelectItem>
+                <SelectItem value="1">Até R$ 300.000</SelectItem>
+                <SelectItem value="2">R$ 300.000 - R$ 600.000</SelectItem>
+                <SelectItem value="3">R$ 600.000 - R$ 1.000.000</SelectItem>
+                <SelectItem value="4">R$ 1.000.000+</SelectItem>
               </SelectContent>
             </Select>
 
-            <Select>
+            <Select value={location} onValueChange={setLocation}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Localização" />
               </SelectTrigger>
@@ -68,7 +87,7 @@ export const SearchFilters = () => {
             </Select>
           </div>
 
-          <Button variant="default" className="w-full sm:w-auto">
+          <Button variant="default" className="w-full sm:w-auto" onClick={handleApplyFilters}>
             Aplicar Filtros
           </Button>
         </div>

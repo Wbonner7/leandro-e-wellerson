@@ -88,7 +88,7 @@ export function VisitScheduleDialog({ open, onOpenChange, propertyId }: VisitSch
           property_id: propertyId,
           visit_date: visitDate.toISOString(),
           status: "scheduled",
-          notes: notes.trim() || null,
+          notes: notes.trim() || undefined,
         });
 
       if (error) throw error;

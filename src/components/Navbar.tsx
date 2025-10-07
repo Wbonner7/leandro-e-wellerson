@@ -61,6 +61,16 @@ export const Navbar = () => {
                     <hr className="my-2" />
                     <button
                       onClick={() => {
+                        navigate("/perfil");
+                        setMobileMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 text-foreground hover:text-primary transition-colors py-2 text-left"
+                    >
+                      <Settings className="h-4 w-4" />
+                      Meu Perfil
+                    </button>
+                    <button
+                      onClick={() => {
                         navigate("/favoritos");
                         setMobileMenuOpen(false);
                       }}
@@ -107,7 +117,7 @@ export const Navbar = () => {
                       variant="hero" 
                       className="w-full"
                       onClick={() => {
-                        navigate("/auth");
+                        navigate("/anunciar");
                         setMobileMenuOpen(false);
                       }}
                     >
@@ -130,6 +140,10 @@ export const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => navigate("/perfil")}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Meu Perfil
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/favoritos")}>
                     <Heart className="h-4 w-4 mr-2" />
                     Meus Favoritos
@@ -143,7 +157,7 @@ export const Navbar = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button variant="hero" className="hidden md:flex">
+              <Button variant="hero" className="hidden md:flex" onClick={() => navigate("/anunciar")}>
                 Anunciar Imóvel
               </Button>
             </>
@@ -153,7 +167,7 @@ export const Navbar = () => {
                 <User className="h-4 w-4 mr-2" />
                 <span>Entrar</span>
               </Button>
-              <Button variant="hero" className="hidden md:flex" onClick={() => navigate("/auth")}>
+              <Button variant="hero" className="hidden md:flex" onClick={() => navigate("/anunciar")}>
                 Anunciar Imóvel
               </Button>
             </>
