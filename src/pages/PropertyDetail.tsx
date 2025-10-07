@@ -37,8 +37,8 @@ const PropertyDetail = () => {
     title: "Apartamento com 55m², 2 quartos e 1 vaga",
     location: "Pompeia, São Paulo",
     fullAddress: "Rua Doutor Augusto de Miranda",
-    price: "R$ 1.650",
-    totalPrice: "R$ 2.700",
+    price: "R$ 450.000",
+    pricePerM2: "R$ 8.182/m²",
     bedrooms: 2,
     bathrooms: 1,
     area: 55,
@@ -49,7 +49,7 @@ const PropertyDetail = () => {
     longitude: -43.3653,
     images: [property1, property1, property1, property1],
     description:
-      "Apartamento com excelente localização, próximo a comércios, transporte público e áreas de lazer. Condomínio com infraestrutura completa.",
+      "Apartamento com excelente localização, próximo a comércios, transporte público e áreas de lazer. Condomínio com infraestrutura completa. Imóvel pronto para morar, com acabamento de qualidade.",
     amenities: [
       "Aceita pet",
       "Piscina",
@@ -59,9 +59,7 @@ const PropertyDetail = () => {
       "Playground",
     ],
     condominium: "R$ 900",
-    iptu: "R$ 87",
-    insurance: "R$ 21",
-    serviceCharge: "R$ 42",
+    iptu: "R$ 150/mês",
   };
 
   const nextImage = () => {
@@ -158,29 +156,28 @@ const PropertyDetail = () => {
 
                 {/* Price */}
                 <div className="bg-background border rounded-lg p-6">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-sm text-muted-foreground">Aluguel</span>
-                    <span className="text-3xl font-bold text-primary">{property.price}</span>
+                  <div className="flex items-baseline gap-2 mb-2">
+                    <span className="text-4xl font-bold text-primary">{property.price}</span>
                   </div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-sm text-muted-foreground">Total</span>
-                    <span className="text-xl font-semibold">{property.totalPrice}</span>
-                  </div>
-                  
-                  <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg">
-                    <p className="text-sm text-blue-900 font-medium mb-2">Em breve</p>
-                    <p className="text-sm text-blue-800">
-                      Esse imóvel está no fim de um contrato. Você pode se mudar a partir de 25/11.
-                    </p>
+                  <div className="flex items-baseline gap-2 mb-4">
+                    <span className="text-sm text-muted-foreground">{property.pricePerM2}</span>
                   </div>
 
                   <div className="mt-4 flex gap-3">
                     <Button size="lg" className="flex-1">
-                      Fazer proposta
+                      <Calendar className="h-5 w-5 mr-2" />
+                      Agendar visita
                     </Button>
                     <Button size="lg" variant="outline" className="flex-1">
-                      Avisar quando disponível
+                      Tenho interesse
                     </Button>
+                  </div>
+                  
+                  <div className="mt-4 p-4 bg-green-50 border border-green-100 rounded-lg">
+                    <p className="text-sm text-green-900 font-medium mb-1">✓ Documentação verificada</p>
+                    <p className="text-sm text-green-800">
+                      Imóvel com documentação regularizada e pronto para negociação.
+                    </p>
                   </div>
                 </div>
 
@@ -282,13 +279,20 @@ const PropertyDetail = () => {
                 <div className="sticky top-24 space-y-4">
                   {/* Price Breakdown Card */}
                   <div className="bg-card border rounded-lg p-6 shadow-sm">
-                    <h3 className="font-semibold text-lg mb-4">Valores</h3>
+                    <h3 className="font-semibold text-lg mb-4">Informações Financeiras</h3>
                     
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Aluguel</span>
+                        <span className="text-muted-foreground">Valor do imóvel</span>
                         <span className="font-semibold">{property.price}</span>
                       </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Valor por m²</span>
+                        <span className="font-semibold">{property.pricePerM2}</span>
+                      </div>
+                      
+                      <Separator className="my-4" />
+                      
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-1">
                           <span className="text-muted-foreground">Condomínio</span>
@@ -303,32 +307,11 @@ const PropertyDetail = () => {
                         </div>
                         <span className="font-semibold">{property.iptu}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-1">
-                          <span className="text-muted-foreground">Seguro incêndio</span>
-                          <Info className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                        <span className="font-semibold">{property.insurance}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-1">
-                          <span className="text-muted-foreground">Taxa de serviço</span>
-                          <Info className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                        <span className="font-semibold">{property.serviceCharge}</span>
-                      </div>
-                      
-                      <Separator className="my-4" />
-                      
-                      <div className="flex justify-between items-center">
-                        <span className="font-bold text-lg">Total</span>
-                        <span className="font-bold text-lg text-primary">{property.totalPrice}</span>
-                      </div>
                     </div>
 
-                    <div className="mt-4">
-                      <Button variant="link" className="w-full text-sm p-0 h-auto">
-                        Entenda se é um bom negócio →
+                    <div className="mt-6">
+                      <Button variant="outline" className="w-full">
+                        Simular financiamento
                       </Button>
                     </div>
                   </div>
@@ -338,8 +321,8 @@ const PropertyDetail = () => {
                     <div className="flex items-start gap-3">
                       <Info className="h-5 w-5 text-blue-600 mt-0.5" />
                       <div className="text-sm text-blue-900">
-                        <p className="font-medium mb-1">Faça uma visita por vídeo ou presencial</p>
-                        <p>Basta combinar com o corretor quando ele entrar em contato.</p>
+                        <p className="font-medium mb-1">Visita presencial ou virtual</p>
+                        <p>Agende sua visita e conheça o imóvel com nosso corretor especializado.</p>
                       </div>
                     </div>
                   </div>

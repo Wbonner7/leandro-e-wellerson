@@ -8,14 +8,13 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 
 export const Hero = () => {
-  const [searchType, setSearchType] = useState<"comprar" | "alugar">("comprar");
   const [city, setCity] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [bedrooms, setBedrooms] = useState("");
 
   const handleSearch = () => {
-    console.log({ searchType, city, neighborhood, priceRange, bedrooms });
+    console.log({ city, neighborhood, priceRange, bedrooms });
     toast.success("Busca em desenvolvimento! Em breve você poderá filtrar imóveis.");
   };
 
@@ -36,29 +35,16 @@ export const Hero = () => {
         <div className="max-w-4xl">
           {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight">
-            {searchType === "comprar" ? "Compre um lar" : "Alugue um lar"}
+            Encontre o imóvel
             <br />
-            <span className="text-white/90">para chamar de seu</span>
+            <span className="text-white/90">dos seus sonhos</span>
           </h1>
 
           {/* Search Card */}
           <Card className="p-6 shadow-2xl bg-white/95 backdrop-blur">
-            {/* Tabs */}
-            <div className="flex gap-2 mb-6 border-b pb-4">
-              <Button
-                variant={searchType === "comprar" ? "default" : "ghost"}
-                onClick={() => setSearchType("comprar")}
-                className="font-semibold"
-              >
-                Comprar
-              </Button>
-              <Button
-                variant={searchType === "alugar" ? "default" : "ghost"}
-                onClick={() => setSearchType("alugar")}
-                className="font-semibold"
-              >
-                Alugar
-              </Button>
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-foreground mb-1">Buscar Imóveis</h2>
+              <p className="text-sm text-muted-foreground">Encontre o imóvel perfeito para você</p>
             </div>
 
             {/* Search Fields */}
