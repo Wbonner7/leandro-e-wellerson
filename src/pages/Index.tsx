@@ -4,6 +4,7 @@ import { SearchFilters } from "@/components/SearchFilters";
 import { FeaturedProperties } from "@/components/FeaturedProperties";
 import { Features } from "@/components/Features";
 import { Footer } from "@/components/Footer";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const Index = () => {
   return (
@@ -15,6 +16,7 @@ const Index = () => {
         <FeaturedProperties />
         <Features />
         <Footer />
+        <CookieConsent />
       </div>
     </div>
   );

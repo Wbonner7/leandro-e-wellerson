@@ -17,21 +17,15 @@ export const Navbar = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-primary font-bold text-xl">
           <Building2 className="h-6 w-6" />
-          <span>Quintto</span>
+          <span>Quinto</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
           <Link to="/" className="text-foreground hover:text-primary transition-colors">
-            Início
+            Comprar
           </Link>
-          <Link to="/search" className="text-foreground hover:text-primary transition-colors">
-            Buscar
-          </Link>
-          <Link to="/sell" className="text-foreground hover:text-primary transition-colors">
-            Vender
-          </Link>
-          <Link to="/about" className="text-foreground hover:text-primary transition-colors">
-            Sobre
+          <Link to="/anunciar" className="text-foreground hover:text-primary transition-colors">
+            Anunciar
           </Link>
         </div>
 
