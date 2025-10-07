@@ -43,10 +43,6 @@ export const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => navigate("/profile")}>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Meu Perfil
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/favoritos")}>
                     <Heart className="h-4 w-4 mr-2" />
                     Meus Favoritos
