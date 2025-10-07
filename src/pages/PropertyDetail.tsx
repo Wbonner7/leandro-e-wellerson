@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,200 +8,351 @@ import { Separator } from "@/components/ui/separator";
 import { PropertyActions } from "@/components/PropertyActions";
 import { PropertyReviews } from "@/components/PropertyReviews";
 import { PropertyMap } from "@/components/PropertyMap";
-import { ViewCounter } from "@/components/ViewCounter";
 import { LiveViewCounter } from "@/components/LiveViewCounter";
 import { BrokerReviews } from "@/components/BrokerReviews";
 import { SimilarProperties } from "@/components/SimilarProperties";
 import {
-  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Share2,
+  Heart,
   Bed,
   Bath,
   Square,
   MapPin,
-  Calendar,
   Car,
-  Wifi,
+  Building,
+  Check,
+  Info,
+  Calendar,
 } from "lucide-react";
 import property1 from "@/assets/property-1.jpg";
 
 const PropertyDetail = () => {
   const { id } = useParams();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Mock data - in real app, fetch based on id
   const property = {
     id: id || "1",
-    title: "Apartamento Moderno Vista Mar",
-    location: "Barra da Tijuca, Rio de Janeiro - RJ",
-    price: "R$ 1.850.000",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 120,
-    parking: 2,
+    title: "Apartamento com 55m², 2 quartos e 1 vaga",
+    location: "Pompeia, São Paulo",
+    fullAddress: "Rua Doutor Augusto de Miranda",
+    price: "R$ 1.650",
+    totalPrice: "R$ 2.700",
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 55,
+    parking: 1,
+    floor: "Até 3º andar",
+    furnished: "Sem mobília",
     latitude: -23.0042,
     longitude: -43.3653,
-    image: property1,
+    images: [property1, property1, property1, property1],
     description:
-      "Apartamento espetacular com vista panorâmica para o mar, totalmente mobiliado com acabamento de alto padrão. Localizado em condomínio clube com completa infraestrutura de lazer e segurança 24h. Possui varanda gourmet ampla, suíte master com closet, cozinha planejada e muito mais.",
+      "Apartamento com excelente localização, próximo a comércios, transporte público e áreas de lazer. Condomínio com infraestrutura completa.",
     amenities: [
+      "Aceita pet",
       "Piscina",
       "Academia",
-      "Salão de Festas",
-      "Quadra Esportiva",
-      "Playground",
-      "Sauna",
-      "Churrasqueira",
+      "Salão de festas",
       "Portaria 24h",
+      "Playground",
     ],
+    condominium: "R$ 900",
+    iptu: "R$ 87",
+    insurance: "R$ 21",
+    serviceCharge: "R$ 42",
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => 
+      prev === property.images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => 
+      prev === 0 ? property.images.length - 1 : prev - 1
+    );
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <div className="pt-16">
-        {/* Back Navigation */}
-        <div className="bg-secondary/30 py-4">
-          <div className="container mx-auto px-4">
-            <Link to="/" className="inline-flex items-center text-primary hover:text-primary/80 transition-colors">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Voltar para listagem
-            </Link>
-          </div>
-        </div>
+        {/* Image Gallery */}
+        <section className="relative bg-black">
+          <div className="max-w-7xl mx-auto">
+            <div className="relative h-[500px]">
+              <img
+                src={property.images[currentImageIndex]}
+                alt={property.title}
+                className="w-full h-full object-cover"
+              />
+              
+              {/* Image Navigation */}
+              <button
+                onClick={prevImage}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all"
+              >
+                <ChevronLeft className="h-6 w-6 text-foreground" />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all"
+              >
+                <ChevronRight className="h-6 w-6 text-foreground" />
+              </button>
 
-        {/* Property Images */}
-        <section className="py-8">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-              <div className="lg:col-span-2">
-                <img
-                  src={property.image}
-                  alt={property.title}
-                  className="w-full h-[400px] lg:h-[600px] object-cover rounded-xl shadow-elegant"
-                />
+              {/* Actions - Top Right */}
+              <div className="absolute top-4 right-4 flex gap-2">
+                <button className="bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all">
+                  <Share2 className="h-5 w-5 text-foreground" />
+                </button>
+                <button className="bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all">
+                  <Heart className="h-5 w-5 text-foreground" />
+                </button>
               </div>
-              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-                <img
-                  src={property.image}
-                  alt="View 2"
-                  className="w-full h-[190px] lg:h-[290px] object-cover rounded-xl shadow-card"
-                />
-                <img
-                  src={property.image}
-                  alt="View 3"
-                  className="w-full h-[190px] lg:h-[290px] object-cover rounded-xl shadow-card"
-                />
+
+              {/* Image Counter */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-full text-sm">
+                {currentImageIndex + 1} / {property.images.length} Fotos
               </div>
             </div>
           </div>
         </section>
 
-        {/* Property Details */}
-        <section className="pb-16">
-          <div className="container mx-auto px-4">
+        {/* Breadcrumb */}
+        <div className="bg-background border-b">
+          <div className="max-w-7xl mx-auto px-4 py-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Link to="/" className="hover:text-primary">Início</Link>
+              <span>›</span>
+              <Link to="/" className="hover:text-primary">São Paulo</Link>
+              <span>›</span>
+              <Link to="/" className="hover:text-primary">Pompeia</Link>
+              <span>›</span>
+              <span className="text-foreground">Imóvel {property.id}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <section className="py-8">
+          <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Content */}
-              <div className="lg:col-span-2">
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-start justify-between">
+              {/* Left Column - Property Info */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Title & Badge */}
+                <div>
+                  <Badge className="mb-3 bg-primary/10 text-primary border-0">Exclusivo</Badge>
+                  <h1 className="text-3xl font-bold text-foreground mb-3">
+                    {property.title}
+                  </h1>
+                  <div className="flex items-center text-muted-foreground mb-4">
+                    <MapPin className="h-5 w-5 mr-2" />
+                    <span className="text-lg">{property.fullAddress}</span>
+                  </div>
+                  <p className="text-muted-foreground">{property.location}</p>
+                </div>
+
+                {/* Price */}
+                <div className="bg-background border rounded-lg p-6">
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-sm text-muted-foreground">Aluguel</span>
+                    <span className="text-3xl font-bold text-primary">{property.price}</span>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-sm text-muted-foreground">Total</span>
+                    <span className="text-xl font-semibold">{property.totalPrice}</span>
+                  </div>
+                  
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                    <p className="text-sm text-blue-900 font-medium mb-2">Em breve</p>
+                    <p className="text-sm text-blue-800">
+                      Esse imóvel está no fim de um contrato. Você pode se mudar a partir de 25/11.
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex gap-3">
+                    <Button size="lg" className="flex-1">
+                      Fazer proposta
+                    </Button>
+                    <Button size="lg" variant="outline" className="flex-1">
+                      Avisar quando disponível
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Property Features */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-6 border-b">
+                  <div className="flex items-center gap-3">
+                    <Square className="h-5 w-5 text-muted-foreground" />
                     <div>
-                      <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-                        {property.title}
-                      </h1>
-                      <div className="flex items-center text-muted-foreground">
-                        <MapPin className="h-5 w-5 mr-2" />
-                        <span>{property.location}</span>
-                      </div>
+                      <div className="text-sm text-muted-foreground">Área</div>
+                      <div className="font-semibold">{property.area} m²</div>
                     </div>
                   </div>
-                  <LiveViewCounter propertyId={property.id} />
+                  <div className="flex items-center gap-3">
+                    <Bed className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <div className="text-sm text-muted-foreground">Quartos</div>
+                      <div className="font-semibold">{property.bedrooms}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Bath className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <div className="text-sm text-muted-foreground">Banheiros</div>
+                      <div className="font-semibold">{property.bathrooms}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Car className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <div className="text-sm text-muted-foreground">Vagas</div>
+                      <div className="font-semibold">{property.parking}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Building className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <div className="text-sm text-muted-foreground">Andar</div>
+                      <div className="font-semibold">{property.floor}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="h-5 w-5 text-green-600" />
+                    <div>
+                      <div className="text-sm text-muted-foreground">Pet</div>
+                      <div className="font-semibold">Aceita pet</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Info className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <div className="text-sm text-muted-foreground">Mobília</div>
+                      <div className="font-semibold">{property.furnished}</div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex flex-wrap gap-4 mb-6">
-                  <div className="flex items-center gap-2 bg-secondary/50 px-4 py-2 rounded-lg">
-                    <Bed className="h-5 w-5 text-primary" />
-                    <span className="font-semibold">{property.bedrooms} Quartos</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-secondary/50 px-4 py-2 rounded-lg">
-                    <Bath className="h-5 w-5 text-primary" />
-                    <span className="font-semibold">{property.bathrooms} Banheiros</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-secondary/50 px-4 py-2 rounded-lg">
-                    <Square className="h-5 w-5 text-primary" />
-                    <span className="font-semibold">{property.area}m²</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-secondary/50 px-4 py-2 rounded-lg">
-                    <Car className="h-5 w-5 text-primary" />
-                    <span className="font-semibold">{property.parking} Vagas</span>
-                  </div>
-                </div>
-
-                <Separator className="my-6" />
-
-                <div className="mb-6">
-                  <h2 className="text-2xl font-semibold mb-4">Sobre o Imóvel</h2>
+                {/* Description */}
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Sobre o imóvel</h2>
                   <p className="text-muted-foreground leading-relaxed">{property.description}</p>
                 </div>
 
-                <Separator className="my-6" />
-
-                <div className="mb-6">
+                {/* Amenities */}
+                <div>
                   <h2 className="text-2xl font-semibold mb-4">Comodidades</h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     {property.amenities.map((amenity, index) => (
-                      <Badge key={index} variant="secondary" className="justify-start p-3">
-                        <Wifi className="h-4 w-4 mr-2" />
-                        {amenity}
-                      </Badge>
+                      <div key={index} className="flex items-center gap-2 text-foreground">
+                        <Check className="h-5 w-5 text-green-600" />
+                        <span>{amenity}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                <Separator className="my-6" />
+                {/* Map */}
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">Localização</h2>
+                  <PropertyMap 
+                    latitude={property.latitude}
+                    longitude={property.longitude}
+                    address={property.location}
+                  />
+                </div>
 
-                <PropertyMap 
-                  latitude={property.latitude}
-                  longitude={property.longitude}
-                  address={property.location}
-                />
-
-                <div className="mt-6">
+                {/* Reviews */}
+                <div>
                   <PropertyReviews propertyId={property.id} />
                 </div>
 
-                <Separator className="my-6" />
-
-                <div className="mt-6">
+                {/* Broker Reviews */}
+                <div>
                   <BrokerReviews brokerId="default-broker-id" />
                 </div>
               </div>
 
-              {/* Sidebar */}
+              {/* Right Column - Pricing Sidebar */}
               <div className="lg:col-span-1">
-                <div className="sticky top-24 bg-card border border-border rounded-xl p-6 shadow-elegant">
-                  <div className="mb-6">
-                    <div className="text-3xl font-bold text-primary mb-1">{property.price}</div>
-                    <div className="text-sm text-muted-foreground">à venda</div>
-                  </div>
-
-                  <Separator className="my-6" />
-
-                  <PropertyActions propertyId={property.id} />
-
-                  <div className="bg-secondary/50 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                      <Calendar className="h-4 w-4" />
-                      <span>Disponível para visitação</span>
+                <div className="sticky top-24 space-y-4">
+                  {/* Price Breakdown Card */}
+                  <div className="bg-card border rounded-lg p-6 shadow-sm">
+                    <h3 className="font-semibold text-lg mb-4">Valores</h3>
+                    
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Aluguel</span>
+                        <span className="font-semibold">{property.price}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-1">
+                          <span className="text-muted-foreground">Condomínio</span>
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <span className="font-semibold">{property.condominium}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-1">
+                          <span className="text-muted-foreground">IPTU</span>
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <span className="font-semibold">{property.iptu}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-1">
+                          <span className="text-muted-foreground">Seguro incêndio</span>
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <span className="font-semibold">{property.insurance}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-1">
+                          <span className="text-muted-foreground">Taxa de serviço</span>
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <span className="font-semibold">{property.serviceCharge}</span>
+                      </div>
+                      
+                      <Separator className="my-4" />
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-lg">Total</span>
+                        <span className="font-bold text-lg text-primary">{property.totalPrice}</span>
+                      </div>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      Seg-Sex: 8h às 18h | Sáb: 8h às 16h
-                    </p>
+
+                    <div className="mt-4">
+                      <Button variant="link" className="w-full text-sm p-0 h-auto">
+                        Entenda se é um bom negócio →
+                      </Button>
+                    </div>
                   </div>
+
+                  {/* Visit Info */}
+                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+                      <div className="text-sm text-blue-900">
+                        <p className="font-medium mb-1">Faça uma visita por vídeo ou presencial</p>
+                        <p>Basta combinar com o corretor quando ele entrar em contato.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* View Counter */}
+                  <LiveViewCounter propertyId={property.id} />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Similar Properties */}
         <SimilarProperties currentPropertyId={property.id} />
 
         <Footer />

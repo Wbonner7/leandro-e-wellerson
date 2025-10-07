@@ -9,44 +9,44 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 221 83% 53%;
+    --primary: 262 83% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 214 32% 91%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 221 83% 53%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 215 20% 90%;
-    --input: 215 20% 90%;
-    --ring: 215 85% 25%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 262 83% 58%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     /* Premium gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(221, 70%, 45%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(221, 83%, 53%) 0%, hsl(210, 75%, 55%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(262, 83%, 58%) 0%, hsl(262, 70%, 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(262, 83%, 58%) 0%, hsl(240, 75%, 60%) 100%);
     --gradient-hero: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
     
     /* Shadows */
-    --shadow-elegant: 0 4px 20px -2px hsl(215 85% 25% / 0.1);
-    --shadow-hover: 0 8px 30px -4px hsl(215 85% 25% / 0.15);
-    --shadow-card: 0 2px 8px -1px hsl(215 25% 15% / 0.08);
+    --shadow-elegant: 0 4px 20px -2px hsl(262 83% 58% / 0.1);
+    --shadow-hover: 0 8px 30px -4px hsl(262 83% 58% / 0.15);
+    --shadow-card: 0 2px 8px -1px hsl(240 10% 3.9% / 0.08);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -55,7 +55,7 @@ All colors MUST be HSL.
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 262 83% 58%;
   }
 
   .dark {

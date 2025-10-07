@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import Favorites from "./pages/Favorites";
 import Profile from "./pages/Profile";
 import Anunciar from "./pages/Anunciar";
+import Agendamentos from "./pages/Agendamentos";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/favoritos" element={<Favorites />} />
           <Route path="/perfil" element={<Profile />} />
           <Route path="/anunciar" element={<Anunciar />} />
+          <Route path="/agendamentos" element={<Agendamentos />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

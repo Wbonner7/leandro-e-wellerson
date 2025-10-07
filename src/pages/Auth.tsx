@@ -142,20 +142,20 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-secondary/20 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md shadow-lg border-0">
+        <CardHeader className="space-y-1 text-center pb-6">
+          <div className="flex items-center justify-center gap-2 mb-6">
             <Building2 className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold">Mançores Elite</span>
+            <span className="text-2xl font-bold">Quito</span>
           </div>
-          <CardTitle className="text-2xl">
-            {isLogin ? "Bem-vindo de volta" : "Criar conta"}
+          <CardTitle className="text-2xl font-semibold">
+            {isLogin ? "Entrar na sua conta" : "Criar sua conta"}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-base">
             {isLogin
-              ? "Entre com sua conta para continuar"
-              : "Crie sua conta para começar"}
+              ? "Bem-vindo de volta ao Quito"
+              : "Encontre seu próximo imóvel"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
