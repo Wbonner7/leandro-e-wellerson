@@ -1,60 +1,142 @@
-import { Search } from "lucide-react";
+import { useState } from "react";
+import { Search, MapPin, Bed, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import heroImage from "@/assets/hero-property.jpg";
+import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
 
 export const Hero = () => {
+  const [searchType, setSearchType] = useState<"comprar" | "alugar">("comprar");
+  const [city, setCity] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [priceRange, setPriceRange] = useState("");
+  const [bedrooms, setBedrooms] = useState("");
+
+  const handleSearch = () => {
+    console.log({ searchType, city, neighborhood, priceRange, bedrooms });
+    toast.success("Busca em desenvolvimento! Em breve você poderá filtrar imóveis.");
+  };
+
   return (
-    <section className="relative min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
           src={heroImage}
-          alt="Luxury Property"
+          alt="Encontre seu imóvel"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20" />
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 relative z-10 text-center">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-          Encontre o Imóvel dos
-          <br />
-          <span className="gradient-accent bg-clip-text text-transparent">Seus Sonhos</span>
-        </h1>
-        <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-          A plataforma mais completa para comprar e vender imóveis com tecnologia de ponta e atendimento premium.
-        </p>
+      <div className="container mx-auto px-4 relative z-10 py-12">
+        <div className="max-w-4xl">
+          {/* Title */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight">
+            {searchType === "comprar" ? "Compre um lar" : "Alugue um lar"}
+            <br />
+            <span className="text-white/90">para chamar de seu</span>
+          </h1>
 
-        {/* Search Bar */}
-        <div className="max-w-3xl mx-auto bg-background rounded-xl shadow-hover p-3 flex flex-col sm:flex-row gap-3">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por cidade, bairro ou código..."
-              className="pl-10 h-12 border-0 focus-visible:ring-0 bg-transparent"
-            />
-          </div>
-          <Button variant="hero" size="lg" className="sm:w-auto w-full">
-            Buscar Imóveis
-          </Button>
-        </div>
+          {/* Search Card */}
+          <Card className="p-6 shadow-2xl bg-white/95 backdrop-blur">
+            {/* Tabs */}
+            <div className="flex gap-2 mb-6 border-b pb-4">
+              <Button
+                variant={searchType === "comprar" ? "default" : "ghost"}
+                onClick={() => setSearchType("comprar")}
+                className="font-semibold"
+              >
+                Comprar
+              </Button>
+              <Button
+                variant={searchType === "alugar" ? "default" : "ghost"}
+                onClick={() => setSearchType("alugar")}
+                className="font-semibold"
+              >
+                Alugar
+              </Button>
+            </div>
 
-        {/* Quick Stats */}
-        <div className="mt-12 grid grid-cols-3 gap-4 max-w-2xl mx-auto">
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-1">1.200+</div>
-            <div className="text-sm text-primary-foreground/80">Imóveis Disponíveis</div>
-          </div>
-          <div className="text-center border-x border-primary-foreground/20">
-            <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-1">850+</div>
-            <div className="text-sm text-primary-foreground/80">Negócios Fechados</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-1">98%</div>
-            <div className="text-sm text-primary-foreground/80">Clientes Satisfeitos</div>
-          </div>
+            {/* Search Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Cidade
+                </label>
+                <Input
+                  placeholder="Busque por cidade"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="h-12"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Bairro
+                </label>
+                <Input
+                  placeholder="Busque por bairro"
+                  value={neighborhood}
+                  onChange={(e) => setNeighborhood(e.target.value)}
+                  className="h-12"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  Valor total até
+                </label>
+                <Select value={priceRange} onValueChange={setPriceRange}>
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Escolha o valor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="300000">R$ 300.000</SelectItem>
+                    <SelectItem value="500000">R$ 500.000</SelectItem>
+                    <SelectItem value="800000">R$ 800.000</SelectItem>
+                    <SelectItem value="1000000">R$ 1.000.000</SelectItem>
+                    <SelectItem value="1500000">R$ 1.500.000</SelectItem>
+                    <SelectItem value="2000000">R$ 2.000.000+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Bed className="h-4 w-4" />
+                  Quartos
+                </label>
+                <Select value={bedrooms} onValueChange={setBedrooms}>
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Nº de quartos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1+</SelectItem>
+                    <SelectItem value="2">2+</SelectItem>
+                    <SelectItem value="3">3+</SelectItem>
+                    <SelectItem value="4">4+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleSearch} 
+              size="lg" 
+              className="w-full h-12 text-base font-semibold"
+            >
+              <Search className="h-5 w-5 mr-2" />
+              Buscar imóveis
+            </Button>
+          </Card>
         </div>
       </div>
     </section>

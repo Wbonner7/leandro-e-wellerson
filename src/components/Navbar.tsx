@@ -16,18 +16,21 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-primary font-bold text-xl">
           <Building2 className="h-6 w-6" />
-          <span>Quinto</span>
+          <span>Quito</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-foreground hover:text-primary transition-colors">
+        <div className="hidden md:flex items-center gap-8">
+          <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Comprar
           </Link>
-          <Link to="/anunciar" className="text-foreground hover:text-primary transition-colors">
+          <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+            Alugar
+          </Link>
+          <Link to="/anunciar" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Anunciar
           </Link>
         </div>
