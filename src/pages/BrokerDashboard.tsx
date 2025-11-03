@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Home, Eye, TrendingUp, Edit, Trash2, Power, PowerOff } from "lucide-react";
+import { Home, Eye, TrendingUp, Edit, Trash2, Power, PowerOff, BarChart3 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -325,6 +325,14 @@ const BrokerDashboard = () => {
                                   >
                                     <Eye className="h-4 w-4 mr-1" />
                                     Ver
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => navigate(`/meus-imoveis/${property.id}/analytics`)}
+                                  >
+                                    <BarChart3 className="h-4 w-4 mr-1" />
+                                    Analytics
                                   </Button>
                                   <Button
                                     variant="outline"

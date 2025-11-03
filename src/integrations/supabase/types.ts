@@ -42,7 +42,22 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "broker_reviews_user_id_profiles_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "consented_user_contacts"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "broker_reviews_user_id_profiles_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contact_consents: {
         Row: {
@@ -248,6 +263,56 @@ export type Database = {
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_analytics: {
+        Row: {
+          city: string | null
+          created_at: string
+          device_type: string | null
+          duration_seconds: number | null
+          event_type: string
+          id: string
+          property_id: string
+          referrer: string | null
+          session_id: string | null
+          state: string | null
+          user_id: string | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          device_type?: string | null
+          duration_seconds?: number | null
+          event_type: string
+          id?: string
+          property_id: string
+          referrer?: string | null
+          session_id?: string | null
+          state?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          device_type?: string | null
+          duration_seconds?: number | null
+          event_type?: string
+          id?: string
+          property_id?: string
+          referrer?: string | null
+          session_id?: string | null
+          state?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_analytics_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
             referencedColumns: ["id"]
           },
         ]

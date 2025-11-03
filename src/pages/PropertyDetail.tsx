@@ -1,5 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -30,7 +32,9 @@ import property1 from "@/assets/property-1.jpg";
 
 const PropertyDetail = () => {
   const { id } = useParams();
+  const { user } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [sessionId] = useState(() => crypto.randomUUID());
 
   const property = {
     id: id || "1",
@@ -73,6 +77,54 @@ const PropertyDetail = () => {
       prev === 0 ? property.images.length - 1 : prev - 1
     );
   };
+
+  // Track property view analytics
+  useEffect(() => {
+    if (!id) return;
+
+    const startTime = Date.now();
+    
+    // Detect device type
+    const deviceType = /Mobile|Android|iPhone/i.test(navigator.userAgent) 
+      ? 'mobile' 
+      : /Tablet|iPad/i.test(navigator.userAgent) 
+      ? 'tablet' 
+      : 'desktop';
+
+    // Track view event
+    const trackView = async () => {
+      try {
+        await supabase.from('property_analytics').insert({
+          property_id: id,
+          event_type: 'view',
+          session_id: sessionId,
+          user_id: user?.id || null,
+          device_type: deviceType,
+          referrer: document.referrer || null,
+        });
+      } catch (error) {
+        console.error('Error tracking view:', error);
+      }
+    };
+
+    trackView();
+
+    // Track duration when user leaves
+    return () => {
+      const duration = Math.floor((Date.now() - startTime) / 1000);
+      
+      if (duration > 0) {
+        supabase.from('property_analytics').insert({
+          property_id: id,
+          event_type: 'view',
+          session_id: sessionId,
+          user_id: user?.id || null,
+          duration_seconds: duration,
+          device_type: deviceType,
+        }).then(null, err => console.error('Error tracking duration:', err));
+      }
+    };
+  }, [id, sessionId, user]);
 
   return (
     <div className="min-h-screen bg-background">
