@@ -86,6 +86,7 @@ export function InterestDialog({ open, onOpenChange, propertyId }: InterestDialo
           income: validatedData.income,
           cpf: validatedData.cpf,
           status: "pending",
+          pipeline_stage: "pending",
         });
 
       if (error) throw error;

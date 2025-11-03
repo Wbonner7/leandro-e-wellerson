@@ -17,6 +17,7 @@ import LeadsManagement from "./pages/LeadsManagement";
 import ClientsManagement from "./pages/ClientsManagement";
 import BrokerDashboard from "./pages/BrokerDashboard";
 import PropertyAnalytics from "./pages/PropertyAnalytics";
+import Pipeline from "./pages/Pipeline";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/agendamentos" element={<Agendamentos />} />
           <Route path="/meus-imoveis" element={<BrokerDashboard />} />
           <Route path="/meus-imoveis/:id/analytics" element={<PropertyAnalytics />} />
+          <Route path="/pipeline" element={<Pipeline />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/leads" element={<LeadsManagement />} />
           <Route path="/admin/clients" element={<ClientsManagement />} />

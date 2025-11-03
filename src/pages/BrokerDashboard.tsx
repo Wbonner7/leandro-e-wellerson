@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Home, Eye, TrendingUp, Edit, Trash2, Power, PowerOff, BarChart3 } from "lucide-react";
+import { Home, Eye, TrendingUp, Edit, Trash2, Power, PowerOff, BarChart3, LayoutDashboard } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -198,7 +198,13 @@ const BrokerDashboard = () => {
       <Navbar />
       <div className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-7xl">
-          <h1 className="text-4xl font-bold mb-8 text-foreground">Meus Imóveis</h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-4xl font-bold text-foreground">Meus Imóveis</h1>
+            <Button onClick={() => navigate("/pipeline")} size="lg">
+              <LayoutDashboard className="h-5 w-5 mr-2" />
+              Abrir Pipeline Kanban
+            </Button>
+          </div>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

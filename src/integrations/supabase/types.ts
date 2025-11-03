@@ -165,6 +165,44 @@ export type Database = {
           },
         ]
       }
+      pipeline_history: {
+        Row: {
+          created_at: string
+          from_stage: string | null
+          id: string
+          interest_id: string
+          moved_by: string | null
+          notes: string | null
+          to_stage: string
+        }
+        Insert: {
+          created_at?: string
+          from_stage?: string | null
+          id?: string
+          interest_id: string
+          moved_by?: string | null
+          notes?: string | null
+          to_stage: string
+        }
+        Update: {
+          created_at?: string
+          from_stage?: string | null
+          id?: string
+          interest_id?: string
+          moved_by?: string | null
+          notes?: string | null
+          to_stage?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_history_interest_id_fkey"
+            columns: ["interest_id"]
+            isOneToOne: false
+            referencedRelation: "property_interests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -354,6 +392,7 @@ export type Database = {
       }
       property_interests: {
         Row: {
+          broker_notes: string | null
           contacted_at: string | null
           cpf: string | null
           created_at: string
@@ -361,14 +400,18 @@ export type Database = {
           full_name: string | null
           id: string
           income: string | null
+          loss_reason: string | null
           message: string | null
           phone: string | null
+          pipeline_stage: string | null
           property_id: string
+          proposal_value: number | null
           status: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          broker_notes?: string | null
           contacted_at?: string | null
           cpf?: string | null
           created_at?: string
@@ -376,14 +419,18 @@ export type Database = {
           full_name?: string | null
           id?: string
           income?: string | null
+          loss_reason?: string | null
           message?: string | null
           phone?: string | null
+          pipeline_stage?: string | null
           property_id: string
+          proposal_value?: number | null
           status?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          broker_notes?: string | null
           contacted_at?: string | null
           cpf?: string | null
           created_at?: string
@@ -391,9 +438,12 @@ export type Database = {
           full_name?: string | null
           id?: string
           income?: string | null
+          loss_reason?: string | null
           message?: string | null
           phone?: string | null
+          pipeline_stage?: string | null
           property_id?: string
+          proposal_value?: number | null
           status?: string | null
           updated_at?: string
           user_id?: string
