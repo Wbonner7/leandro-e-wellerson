@@ -64,6 +64,15 @@ export const Navbar = () => {
                     <hr className="my-2" />
                     <button
                       onClick={() => {
+                        navigate("/meus-imoveis");
+                        setMobileMenuOpen(false);
+                      }}
+                      className="text-foreground hover:text-primary transition-colors py-2 text-left"
+                    >
+                      Meus Imóveis
+                    </button>
+                    <button
+                      onClick={() => {
                         navigate("/perfil");
                         setMobileMenuOpen(false);
                       }}
@@ -143,6 +152,9 @@ export const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => navigate("/meus-imoveis")}>
+                    Meus Imóveis
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/perfil")}>
                     <Settings className="h-4 w-4 mr-2" />
                     Meu Perfil

@@ -15,6 +15,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ClientDashboard from "./pages/ClientDashboard";
 import LeadsManagement from "./pages/LeadsManagement";
 import ClientsManagement from "./pages/ClientsManagement";
+import BrokerDashboard from "./pages/BrokerDashboard";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/perfil" element={<Profile />} />
           <Route path="/anunciar" element={<Anunciar />} />
           <Route path="/agendamentos" element={<Agendamentos />} />
+          <Route path="/meus-imoveis" element={<BrokerDashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/leads" element={<LeadsManagement />} />
           <Route path="/admin/clients" element={<ClientsManagement />} />
