@@ -32,11 +32,13 @@ export default function Favorites() {
       navigate("/auth");
       return;
     }
+  }, [user, authLoading, navigate]);
 
+  useEffect(() => {
     if (user) {
       loadFavorites();
     }
-  }, [user, authLoading, navigate]);
+  }, [user]);
 
   const loadFavorites = async () => {
     if (!user) return;

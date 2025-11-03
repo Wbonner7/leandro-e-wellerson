@@ -5,11 +5,12 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, Clock, X } from "lucide-react";
+import { Calendar, MapPin, Clock, X, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Visit {
   id: string;
@@ -25,28 +26,27 @@ interface Visit {
 }
 
 export default function Agendamentos() {
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [visits, setVisits] = useState<Visit[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuthAndLoadVisits();
-  }, []);
-
-  const checkAuthAndLoadVisits = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!authLoading && !user) {
       navigate("/auth");
       return;
     }
-    await loadVisits();
-  };
+  }, [user, authLoading, navigate]);
 
-  const loadVisits = async () => {
+  useEffect(() => {
+    if (user) {
+      loadVisits(user.id);
+    }
+  }, [user]);
+
+  const loadVisits = async (userId: string) => {
+    setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
       const { data, error } = await supabase
         .from("property_visits")
         .select(`
@@ -57,7 +57,7 @@ export default function Agendamentos() {
             price
           )
         `)
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .order("visit_date", { ascending: true });
 
       if (error) throw error;
@@ -70,6 +70,8 @@ export default function Agendamentos() {
   };
 
   const cancelVisit = async (visitId: string) => {
+    if (!user) return;
+
     try {
       const { error } = await supabase
         .from("property_visits")
@@ -79,7 +81,7 @@ export default function Agendamentos() {
       if (error) throw error;
       
       toast.success("Visita cancelada com sucesso");
-      await loadVisits();
+      loadVisits(user.id);
     } catch (error: any) {
       toast.error("Erro ao cancelar visita");
     }
@@ -100,17 +102,19 @@ export default function Agendamentos() {
     );
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen">
         <Navbar />
-        <div className="pt-16 flex items-center justify-center min-h-[60vh]">
-          <p className="text-muted-foreground">Carregando...</p>
+        <div className="pt-24 pb-12 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
         <Footer />
       </div>
     );
   }
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen">

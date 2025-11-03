@@ -26,7 +26,7 @@ const propertySchema = z.object({
 });
 
 const Anunciar = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
@@ -42,11 +42,11 @@ const Anunciar = () => {
   });
 
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       toast.error("Faça login para anunciar um imóvel");
       navigate("/auth");
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -133,6 +133,18 @@ const Anunciar = () => {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <div className="pt-24 pb-12 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!user) return null;
 

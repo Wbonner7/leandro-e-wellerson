@@ -13,7 +13,7 @@ import { User, Upload, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -24,12 +24,14 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       navigate("/auth");
       return;
     }
-    loadProfile();
-  }, [user, navigate]);
+    if (user) {
+      loadProfile();
+    }
+  }, [user, authLoading, navigate]);
 
   const loadProfile = async () => {
     if (!user) return;
@@ -123,6 +125,18 @@ const Profile = () => {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <div className="pt-24 pb-12 flex items-center justify-center">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!user) return null;
 
