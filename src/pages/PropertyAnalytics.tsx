@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Eye, Clock, TrendingUp, Smartphone, Monitor, Tablet, MapPin, Calendar } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Loader2 } from "lucide-react";
@@ -39,7 +40,8 @@ export default function PropertyAnalytics() {
   const { user, loading: authLoading } = useAuth();
   const [property, setProperty] = useState<Property | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(false);
   const [period, setPeriod] = useState<"7" | "30" | "90">("30");
 
   useEffect(() => {
@@ -50,12 +52,20 @@ export default function PropertyAnalytics() {
 
   useEffect(() => {
     if (!id || !user) return;
-    loadAnalytics();
+    
+    // If analytics already loaded, just refresh data
+    if (analytics) {
+      setDataLoading(true);
+      loadAnalytics().finally(() => setDataLoading(false));
+    } else {
+      // First time loading
+      setInitialLoading(true);
+      loadAnalytics().finally(() => setInitialLoading(false));
+    }
   }, [id, user, period]);
 
   const loadAnalytics = async () => {
     try {
-      setLoading(true);
 
       // Load property info
       const { data: propertyData, error: propertyError } = await supabase
@@ -156,12 +166,10 @@ export default function PropertyAnalytics() {
       });
     } catch (error) {
       console.error("Error loading analytics:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (authLoading || loading) {
+  if (authLoading || initialLoading) {
     return (
       <div className="min-h-screen">
         <Navbar />
@@ -173,7 +181,7 @@ export default function PropertyAnalytics() {
     );
   }
 
-  if (!property || !analytics) return null;
+  if (!property) return null;
 
   return (
     <div className="min-h-screen">
@@ -200,131 +208,167 @@ export default function PropertyAnalytics() {
 
           {/* Metrics Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total de Visualizações</CardTitle>
-                <Eye className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{analytics.totalViews}</div>
-                <p className="text-xs text-muted-foreground">{analytics.uniqueViews} visitantes únicos</p>
-              </CardContent>
-            </Card>
+            {dataLoading ? (
+              <>
+                {[1, 2, 3, 4].map((i) => (
+                  <Card key={i}>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <Skeleton className="h-4 w-[150px]" />
+                      <Skeleton className="h-4 w-4" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-8 w-[100px] mb-2" />
+                      <Skeleton className="h-3 w-[120px]" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </>
+            ) : analytics ? (
+              <>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total de Visualizações</CardTitle>
+                    <Eye className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{analytics.totalViews}</div>
+                    <p className="text-xs text-muted-foreground">{analytics.uniqueViews} visitantes únicos</p>
+                  </CardContent>
+                </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Tempo Médio</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{analytics.avgDuration}s</div>
-                <p className="text-xs text-muted-foreground">Por visita</p>
-              </CardContent>
-            </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Tempo Médio</CardTitle>
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{analytics.avgDuration}s</div>
+                    <p className="text-xs text-muted-foreground">Por visita</p>
+                  </CardContent>
+                </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{analytics.conversionRate}%</div>
-                <p className="text-xs text-muted-foreground">Visualização → Interesse</p>
-              </CardContent>
-            </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{analytics.conversionRate}%</div>
+                    <p className="text-xs text-muted-foreground">Visualização → Interesse</p>
+                  </CardContent>
+                </Card>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Dispositivo Principal</CardTitle>
-                <Smartphone className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold capitalize">
-                  {analytics.deviceBreakdown[0]?.name || "N/A"}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {analytics.deviceBreakdown[0]?.value || 0} visualizações
-                </p>
-              </CardContent>
-            </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Dispositivo Principal</CardTitle>
+                    <Smartphone className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold capitalize">
+                      {analytics.deviceBreakdown[0]?.name || "N/A"}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {analytics.deviceBreakdown[0]?.value || 0} visualizações
+                    </p>
+                  </CardContent>
+                </Card>
+              </>
+            ) : null}
           </div>
 
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Visualizações por Dia</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={analytics.viewsByDay}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="views" stroke="hsl(var(--primary))" strokeWidth={2} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+            {dataLoading ? (
+              <>
+                {[1, 2, 3, 4].map((i) => (
+                  <Card key={i}>
+                    <CardHeader>
+                      <Skeleton className="h-6 w-[200px]" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-[300px] w-full" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </>
+            ) : analytics ? (
+              <>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Visualizações por Dia</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={analytics.viewsByDay}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Line type="monotone" dataKey="views" stroke="hsl(var(--primary))" strokeWidth={2} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Dispositivos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie data={analytics.deviceBreakdown} cx="50%" cy="50%" labelLine={false} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={80} fill="hsl(var(--primary))" dataKey="value">
-                      {analytics.deviceBreakdown.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Dispositivos</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Pie data={analytics.deviceBreakdown} cx="50%" cy="50%" labelLine={false} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} outerRadius={80} fill="hsl(var(--primary))" dataKey="value">
+                          {analytics.deviceBreakdown.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Origem do Tráfego</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={analytics.referrerBreakdown}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="value" fill="hsl(var(--primary))" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Interesse por Região</CardTitle>
+                    <CardDescription>Top 10 cidades</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3 max-h-[300px] overflow-y-auto">
+                      {analytics.locationBreakdown.map((loc, idx) => (
+                        <div key={idx} className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm">{loc.city}, {loc.state}</span>
+                          </div>
+                          <span className="text-sm font-medium">{loc.count} views</span>
+                        </div>
                       ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Origem do Tráfego</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={analytics.referrerBreakdown}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="hsl(var(--primary))" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Interesse por Região</CardTitle>
-                <CardDescription>Top 10 cidades</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 max-h-[300px] overflow-y-auto">
-                  {analytics.locationBreakdown.map((loc, idx) => (
-                    <div key={idx} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{loc.city}, {loc.state}</span>
-                      </div>
-                      <span className="text-sm font-medium">{loc.count} views</span>
+                      {analytics.locationBreakdown.length === 0 && (
+                        <p className="text-sm text-muted-foreground">Nenhum dado de localização disponível</p>
+                      )}
                     </div>
-                  ))}
-                  {analytics.locationBreakdown.length === 0 && (
-                    <p className="text-sm text-muted-foreground">Nenhum dado de localização disponível</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </>
+            ) : null}
           </div>
 
           {/* Recent Views Table */}
@@ -334,33 +378,46 @@ export default function PropertyAnalytics() {
               <CardDescription>Últimas 20 visualizações</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-medium">Data/Hora</th>
-                      <th className="text-left py-3 px-4 font-medium">Dispositivo</th>
-                      <th className="text-left py-3 px-4 font-medium">Localização</th>
-                      <th className="text-left py-3 px-4 font-medium">Duração</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {analytics.recentViews.map((view, idx) => (
-                      <tr key={idx} className="border-b">
-                        <td className="py-3 px-4 text-sm">
-                          {format(new Date(view.created_at), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                        </td>
-                        <td className="py-3 px-4 text-sm capitalize">{view.device_type}</td>
-                        <td className="py-3 px-4 text-sm">{view.city}</td>
-                        <td className="py-3 px-4 text-sm">{view.duration_seconds}s</td>
+              {dataLoading ? (
+                <div className="space-y-3">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="flex gap-4">
+                      <Skeleton className="h-4 w-[150px]" />
+                      <Skeleton className="h-4 w-[100px]" />
+                      <Skeleton className="h-4 w-[120px]" />
+                      <Skeleton className="h-4 w-[60px]" />
+                    </div>
+                  ))}
+                </div>
+              ) : analytics ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-4 font-medium">Data/Hora</th>
+                        <th className="text-left py-3 px-4 font-medium">Dispositivo</th>
+                        <th className="text-left py-3 px-4 font-medium">Localização</th>
+                        <th className="text-left py-3 px-4 font-medium">Duração</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {analytics.recentViews.length === 0 && (
-                  <p className="text-center py-8 text-muted-foreground">Nenhuma visualização recente</p>
-                )}
-              </div>
+                    </thead>
+                    <tbody>
+                      {analytics.recentViews.map((view, idx) => (
+                        <tr key={idx} className="border-b">
+                          <td className="py-3 px-4 text-sm">
+                            {format(new Date(view.created_at), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                          </td>
+                          <td className="py-3 px-4 text-sm capitalize">{view.device_type}</td>
+                          <td className="py-3 px-4 text-sm">{view.city}</td>
+                          <td className="py-3 px-4 text-sm">{view.duration_seconds}s</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {analytics.recentViews.length === 0 && (
+                    <p className="text-center py-8 text-muted-foreground">Nenhuma visualização recente</p>
+                  )}
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         </div>
